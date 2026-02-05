@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>mcalc_beta - 建築材料計算器</title>
+    <title>mcalc_beta - 建築材料計算器 v1.0.0</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <style>
@@ -222,6 +222,16 @@
         .nav-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
+        }
+        
+        .version-info {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            font-size: 14px;
+            color: #7f8c8d;
         }
         
         /* 彈出視窗樣式 */
@@ -714,6 +724,10 @@
         <div class="nav-buttons">
             <a href="./main.html" class="nav-button">🏠 返回主選單</a>
         </div>
+        
+        <div class="version-info">
+            <p>版本: v1.0.0 | 更新時間: 2026-02-05</p>
+        </div>
     </div>
 
     <script>
@@ -1175,6 +1189,33 @@
                 }, 2000); // 2秒後執行
             }
         });
+
+        // 加載版本信息
+        async function loadVersionInfo() {
+            try {
+                const response = await fetch('./version.json');
+                const versionData = await response.json();
+                
+                // 更新頁面上的版本信息
+                const versionElements = document.querySelectorAll('.version-info');
+                versionElements.forEach(element => {
+                    element.innerHTML = `<p>版本: ${versionData.version} | 構建號: ${versionData.buildNumber} | 更新時間: ${versionData.releaseDate}</p>`;
+                });
+                
+                // 在標題中也顯示版本
+                document.title = `mcalc_beta - 建築材料計算器 ${versionData.version}`;
+            } catch (error) {
+                console.log('無法加載版本信息:', error);
+                // 如果無法加載版本文件，使用默認版本號
+                const versionElements = document.querySelectorAll('.version-info');
+                versionElements.forEach(element => {
+                    element.innerHTML = '<p>版本: v1.0.0 | 構建號: 2026020501 | 更新時間: 2026-02-05</p>';
+                });
+            }
+        }
+
+        // 頁面加載時加載版本信息
+        document.addEventListener('DOMContentLoaded', loadVersionInfo);
     </script>
 </body>
 </html>
