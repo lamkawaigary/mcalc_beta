@@ -350,8 +350,12 @@
                 <input type="number" id="tilesArea" step="0.01" min="0" placeholder="例如: 12.5" class="pulse">
             </div>
             <div class="form-group">
-                <label for="tileSize">瓷磚尺寸 (厘米 × 厘米):</label>
-                <input type="text" id="tileSize" placeholder="例如: 30x30 或 60x60" class="pulse">
+                <label for="tileLength">瓷磚長度 (厘米):</label>
+                <input type="number" id="tileLength" step="0.1" min="0" placeholder="例如: 30" class="pulse">
+            </div>
+            <div class="form-group">
+                <label for="tileWidth">瓷磚寬度 (厘米):</label>
+                <input type="number" id="tileWidth" step="0.1" min="0" placeholder="例如: 30" class="pulse">
             </div>
             <div class="form-group">
                 <label for="wastagePercent">損耗率 (%):</label>
@@ -588,7 +592,8 @@
         // 瓷磚用量計算
         function calculateTiles() {
             const area = parseFloat(document.getElementById('tilesArea').value);
-            const tileSizeStr = document.getElementById('tileSize').value;
+            const tileLength = parseFloat(document.getElementById('tileLength').value);
+            const tileWidth = parseFloat(document.getElementById('tileWidth').value);
             const wastagePercent = parseFloat(document.getElementById('wastagePercent').value) || 5;
             
             if (isNaN(area) || area <= 0) {
@@ -596,33 +601,23 @@
                 return;
             }
             
-            if (!tileSizeStr) {
-                alert('請輸入瓷磚尺寸 (例如: 30x30)');
-                return;
-            }
-            
-            const sizeParts = tileSizeStr.split('x');
-            if (sizeParts.length !== 2) {
-                alert('瓷磚尺寸格式錯誤，請使用 "長x寬" 格式 (例如: 30x30)');
-                return;
-            }
-            
-            const length = parseFloat(sizeParts[0]) / 100; // 轉換為米
-            const width = parseFloat(sizeParts[1]) / 100; // 轉換為米
-            
-            if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) {
+            if (isNaN(tileLength) || isNaN(tileWidth) || tileLength <= 0 || tileWidth <= 0) {
                 alert('請輸入有效的瓷磚尺寸');
                 return;
             }
             
-            const tileArea = length * width;
+            // 轉換為米
+            const lengthInMeters = tileLength / 100;
+            const widthInMeters = tileWidth / 100;
+            
+            const tileArea = lengthInMeters * widthInMeters;
             const tilesNeeded = Math.ceil((area / tileArea) * (1 + wastagePercent / 100));
             
             const resultDiv = document.getElementById('tilesResult');
             resultDiv.innerHTML = `
                 <h4>🪨 計算結果:</h4>
                 <p><strong>鋪設面積:</strong> ${area} 平方公尺</p>
-                <p><strong>瓷磚尺寸:</strong> ${length*100}cm × ${width*100}cm</p>
+                <p><strong>瓷磚尺寸:</strong> ${tileLength}cm × ${tileWidth}cm</p>
                 <p><strong>瓷磚面積:</strong> ${tileArea.toFixed(4)} 平方公尺</p>
                 <p><strong>所需瓷磚數量:</strong> ${tilesNeeded} 塊</p>
                 <p><small>✅ (已包含${wastagePercent}%損耗及切割需求)</small></p>
