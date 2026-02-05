@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>mcalc_beta - 建築材料計算器</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
@@ -1092,18 +1095,86 @@
             }
         }
 
-        // PWA Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((registration) => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
+        // 強制更新 Service Worker 和清除緩存
+        function forceUpdate() {
+            // 清除所有緩存
+            if ('caches' in window) {
+                caches.keys().then(function(cacheNames) {
+                    cacheNames.forEach(function(cacheName) {
+                        caches.delete(cacheName);
+                        console.log('Cache deleted:', cacheName);
                     });
-            });
+                });
+            }
+
+            // 強制更新 Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('Service Worker unregistered');
+                        
+                        // 重新加載頁面以獲取最新版本
+                        window.location.reload(true);
+                    }
+                });
+            }
         }
+
+        // 檢查是否有可用的更新
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then((registration) => {
+                    console.log('SW registered: ', registration);
+
+                    // 監聽更新
+                    registration.onupdatefound = () => {
+                        const installingWorker = registration.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // 發現新版本，提示用戶刷新
+                                if (confirm('發現新版本，是否重新加載應用？')) {
+                                    window.location.reload(true);
+                                }
+                            }
+                        };
+                    };
+                })
+                .catch((registrationError) => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+        }
+
+        // 頁面加載時強制檢查更新
+        window.addEventListener('load', function() {
+            // 延遲執行以避免阻塞頁面加載
+            setTimeout(() => {
+                // 嘗試註冊一個新的 Service Worker 來檢查是否有更新
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistration('./sw.js').then(function(registration) {
+                        if (registration) {
+                            registration.update(); // 檢查更新
+                        }
+                    });
+                }
+            }, 1000); // 1秒後執行
+        });
+
+        // 每次頁面可見時檢查更新
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // 頁面回到前台時，延遲檢查更新
+                setTimeout(() => {
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistration('./sw.js').then(function(registration) {
+                            if (registration) {
+                                registration.update();
+                            }
+                        });
+                    }
+                }, 2000); // 2秒後執行
+            }
+        });
     </script>
 </body>
 </html>
