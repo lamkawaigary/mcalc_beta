@@ -1,0 +1,3 @@
+Deployment verification file - this confirms the latest version has been deployed
+Updated on: February 5, 2026
+Latest feature: Construction material calculators with rebar and wood calculations
