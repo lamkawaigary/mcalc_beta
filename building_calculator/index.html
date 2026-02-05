@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建築材料用量計算器</title>
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .calculator-selector {
+            margin-bottom: 20px;
+        }
+        .calculator-form {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .calculator-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e8;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .material-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ 建築材料用量計算器</h1>
+        
+        <div class="calculator-selector">
+            <label for="calcType">選擇計算類型:</label>
+            <select id="calcType">
+                <option value="">-- 請選擇 --</option>
+                <option value="concrete">混凝土用量計算</option>
+                <option value="brick">磚塊用量計算</option>
+                <option value="tiles">瓷磚用量計算</option>
+                <option value="paint">油漆用量計算</option>
+                <option value="flooring">地板材料用量計算</option>
+                <option value="sand_cement">沙水泥用量計算</option>
+            </select>
+        </div>
+        
+        <!-- 混凝土計算器 -->
+        <div id="concreteForm" class="calculator-form">
+            <h3>混凝土用量計算</h3>
+            <div class="form-group">
+                <label for="concreteLength">長度 (米):</label>
+                <input type="number" id="concreteLength" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label for="concreteWidth">寬度 (米):</label>
+                <input type="number" id="concreteWidth" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label for="concreteHeight">高度/厚度 (米):</label>
+                <input type="number" id="concreteHeight" step="0.01" min="0">
+            </div>
+            <button onclick="calculateConcrete()">計算混凝土用量</button>
+            
+            <div id="concreteResult" class="result"></div>
+        </div>
+        
+        <!-- 磚塊計算器 -->
+        <div id="brickForm" class="calculator-form">
+            <h3>磚塊用量計算</h3>
+            <div class="form-group">
+                <label for="brickWallArea">牆壁面積 (平方米):</label>
+                <input type="number" id="brickWallArea" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label for="brickType">磚塊類型:</label>
+                <select id="brickType">
+                    <option value="standard">標準磚 (230×110×76mm)</option>
+                    <option value="hollow">空心磚 (230×110×150mm)</option>
+                    <option value="solid">實心磚 (230×110×110mm)</option>
+                </select>
+            </div>
+            <button onclick="calculateBrick()">計算磚塊用量</button>
+            
+            <div id="brickResult" class="result"></div>
+        </div>
+        
+        <!-- 瓷磚計算器 -->
+        <div id="tilesForm" class="calculator-form">
+            <h3>瓷磚用量計算</h3>
+            <div class="form-group">
+                <label for="tilesArea">鋪設面積 (平方米):</label>
+                <input type="number" id="tilesArea" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label for="tileSize">瓷磚尺寸 (厘米 × 厘米):</label>
+                <input type="text" id="tileSize" placeholder="例如: 30x30 或 60x60">
+            </div>
+            <div class="form-group">
+                <label for="wastagePercent">損耗率 (%):</label>
+                <input type="number" id="wastagePercent" value="5" min="0" max="20">
+            </div>
+            <button onclick="calculateTiles()">計算瓷磚用量</button>
+            
+            <div id="tilesResult" class="result"></div>
+        </div>
+        
+        <!-- 油漆計算器 -->
+        <div id="paintForm" class="calculator-form">
+            <h3>油漆用量計算</h3>
+            <div class="form-group">
+                <label for="paintArea">塗刷面積 (平方米):</label>
+                <input type="number" id="paintArea" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label for="paintLayers">塗刷層數:</label>
+                <input type="number" id="paintLayers" value="2" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label for="paintCoverage">每升油漆覆蓋面積 (平方米/升):</label>
+                <input type="number" id="paintCoverage" value="10" step="0.1" min="1">
+            </div>
+            <button onclick="calculatePaint()">計算油漆用量</button>
+            
+            <div id="paintResult" class="result"></div>
+        </div>
+        
+        <!-- 地板材料計算器 -->
+        <div id="flooringForm" class="calculator-form">
+            <h3>地板材料用量計算</h3>
+            <div class="form-group">
+                <label for="flooringArea">鋪設面積 (平方米):</label>
+                <input type="number" id="flooringArea" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label for="flooringType">地板類型:</label>
+                <select id="flooringType">
+                    <option value="wood">木地板</option>
+                    <option value="laminate">複合地板</option>
+                    <option value="vinyl">乙烯基地板</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="flooringWastage">損耗率 (%):</label>
+                <input type="number" id="flooringWastage" value="7" min="0" max="20">
+            </div>
+            <button onclick="calculateFlooring()">計算地板用量</button>
+            
+            <div id="flooringResult" class="result"></div>
+        </div>
+        
+        <!-- 沙水泥計算器 -->
+        <div id="sandCementForm" class="calculator-form">
+            <h3>沙水泥用量計算</h3>
+            <div class="form-group">
+                <label for="sandCementVolume">所需砂漿體積 (立方米):</label>
+                <input type="number" id="sandCementVolume" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label for="mixRatio">混合比例 (水泥:沙):</label>
+                <select id="mixRatio">
+                    <option value="1:3">1:3 (水泥:沙) - 砌磚用</option>
+                    <option value="1:4">1:4 (水泥:沙) - 一般抹灰</option>
+                    <option value="1:5">1:5 (水泥:沙) - 輕負荷抹灰</option>
+                    <option value="1:6">1:6 (水泥:沙) - 內牆抹灰</option>
+                </select>
+            </div>
+            <button onclick="calculateSandCement()">計算沙水泥用量</button>
+            
+            <div id="sandCementResult" class="result"></div>
+        </div>
+        
+        <div class="material-info">
+            <h3>💡 使用說明</h3>
+            <ul>
+                <li>從下拉菜單中選擇所需的計算類型</li>
+                <li>填入相關的尺寸或面積數據</li>
+                <li>點擊計算按鈕獲得結果</li>
+                <li>結果已考慮常規損耗和施工需求</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 顯示相應的計算表單
+        document.getElementById('calcType').addEventListener('change', function() {
+            // 隱藏所有表單
+            const forms = document.querySelectorAll('.calculator-form');
+            forms.forEach(form => form.classList.remove('active'));
+            
+            // 顯示選中的表單
+            const selectedValue = this.value;
+            if (selectedValue) {
+                document.getElementById(selectedValue + 'Form').classList.add('active');
+            }
+        });
+
+        // 混凝土用量計算
+        function calculateConcrete() {
+            const length = parseFloat(document.getElementById('concreteLength').value);
+            const width = parseFloat(document.getElementById('concreteWidth').value);
+            const height = parseFloat(document.getElementById('concreteHeight').value);
+            
+            if (isNaN(length) || isNaN(width) || isNaN(height) || length <= 0 || width <= 0 || height <= 0) {
+                alert('請輸入有效的尺寸值');
+                return;
+            }
+            
+            const volume = length * width * height;
+            const cement = volume * 320; // kg (約每立方公尺320kg水泥)
+            const sand = volume * 0.5; // 立方公尺
+            const gravel = volume * 1.0; // 立方公尺
+            const water = volume * 180; // 升
+            
+            const resultDiv = document.getElementById('concreteResult');
+            resultDiv.innerHTML = `
+                <h4>計算結果:</h4>
+                <p><strong>混凝土體積:</strong> ${volume.toFixed(2)} 立方公尺</p>
+                <p><strong>所需材料:</strong></p>
+                <ul>
+                    <li>水泥: ${cement.toFixed(2)} 公斤</li>
+                    <li>沙: ${sand.toFixed(2)} 立方公尺</li>
+                    <li>碎石: ${gravel.toFixed(2)} 立方公尺</li>
+                    <li>水: ${water.toFixed(2)} 升</li>
+                </ul>
+                <p><small>注意: 以上為標準C20混凝土配合比估算，實際用量可能因設計要求有所不同</small></p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // 磚塊用量計算
+        function calculateBrick() {
+            const area = parseFloat(document.getElementById('brickWallArea').value);
+            const brickType = document.getElementById('brickType').value;
+            
+            if (isNaN(area) || area <= 0) {
+                alert('請輸入有效的面積值');
+                return;
+            }
+            
+            let bricksPerSqM;
+            switch(brickType) {
+                case 'standard':
+                    bricksPerSqM = 60; // 標準磚每平方公尺約60塊
+                    break;
+                case 'hollow':
+                    bricksPerSqM = 35; // 空心磚每平方公尺約35塊
+                    break;
+                case 'solid':
+                    bricksPerSqM = 45; // 實心磚每平方公尺約45塊
+                    break;
+                default:
+                    bricksPerSqM = 60;
+            }
+            
+            const bricksNeeded = Math.ceil(area * bricksPerSqM * 1.05); // 加5%損耗
+            
+            const resultDiv = document.getElementById('brickResult');
+            resultDiv.innerHTML = `
+                <h4>計算結果:</h4>
+                <p><strong>牆壁面積:</strong> ${area} 平方公尺</p>
+                <p><strong>所需磚塊數量:</strong> ${bricksNeeded} 塊</p>
+                <p><small>(已包含5%損耗及施工需求)</small></p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // 瓷磚用量計算
+        function calculateTiles() {
+            const area = parseFloat(document.getElementById('tilesArea').value);
+            const tileSizeStr = document.getElementById('tileSize').value;
+            const wastagePercent = parseFloat(document.getElementById('wastagePercent').value) || 5;
+            
+            if (isNaN(area) || area <= 0) {
+                alert('請輸入有效的面積值');
+                return;
+            }
+            
+            if (!tileSizeStr) {
+                alert('請輸入瓷磚尺寸 (例如: 30x30)');
+                return;
+            }
+            
+            const sizeParts = tileSizeStr.split('x');
+            if (sizeParts.length !== 2) {
+                alert('瓷磚尺寸格式錯誤，請使用 "長x寬" 格式 (例如: 30x30)');
+                return;
+            }
+            
+            const length = parseFloat(sizeParts[0]) / 100; // 轉換為米
+            const width = parseFloat(sizeParts[1]) / 100; // 轉換為米
+            
+            if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) {
+                alert('請輸入有效的瓷磚尺寸');
+                return;
+            }
+            
+            const tileArea = length * width;
+            const tilesNeeded = Math.ceil((area / tileArea) * (1 + wastagePercent / 100));
+            
+            const resultDiv = document.getElementById('tilesResult');
+            resultDiv.innerHTML = `
+                <h4>計算結果:</h4>
+                <p><strong>鋪設面積:</strong> ${area} 平方公尺</p>
+                <p><strong>瓷磚尺寸:</strong> ${length*100}cm × ${width*100}cm</p>
+                <p><strong>瓷磚面積:</strong> ${tileArea.toFixed(4)} 平方公尺</p>
+                <p><strong>所需瓷磚數量:</strong> ${tilesNeeded} 塊</p>
+                <p><small>(已包含${wastagePercent}%損耗及切割需求)</small></p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // 油漆用量計算
+        function calculatePaint() {
+            const area = parseFloat(document.getElementById('paintArea').value);
+            const layers = parseInt(document.getElementById('paintLayers').value) || 2;
+            const coverage = parseFloat(document.getElementById('paintCoverage').value) || 10;
+            
+            if (isNaN(area) || area <= 0) {
+                alert('請輸入有效的面積值');
+                return;
+            }
+            
+            const paintNeeded = (area * layers) / coverage;
+            
+            const resultDiv = document.getElementById('paintResult');
+            resultDiv.innerHTML = `
+                <h4>計算結果:</h4>
+                <p><strong>塗刷面積:</strong> ${area} 平方公尺</p>
+                <p><strong>塗刷層數:</strong> ${layers} 層</p>
+                <p><strong>每升覆蓋面積:</strong> ${coverage} 平方公尺</p>
+                <p><strong>所需油漆:</strong> ${paintNeeded.toFixed(2)} 升</p>
+                <p><small>建議多預留10-15%以確保充足</small></p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // 地板材料用量計算
+        function calculateFlooring() {
+            const area = parseFloat(document.getElementById('flooringArea').value);
+            const flooringType = document.getElementById('flooringType').value;
+            const wastage = parseFloat(document.getElementById('flooringWastage').value) || 7;
+            
+            if (isNaN(area) || area <= 0) {
+                alert('請輸入有效的面積值');
+                return;
+            }
+            
+            const totalArea = area * (1 + wastage / 100);
+            const packsNeeded = Math.ceil(totalArea); // 假設每包覆蓋1平方米，實際會根據產品調整
+            
+            const resultDiv = document.getElementById('flooringResult');
+            resultDiv.innerHTML = `
+                <h4>計算結果:</h4>
+                <p><strong>鋪設面積:</strong> ${area} 平方公尺</p>
+                <p><strong>損耗率:</strong> ${wastage}%</p>
+                <p><strong>所需材料面積:</strong> ${totalArea.toFixed(2)} 平方公尺</p>
+                <p><small>(已包含${wastage}%損耗及裁切需求)</small></p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // 沙水泥用量計算
+        function calculateSandCement() {
+            const volume = parseFloat(document.getElementById('sandCementVolume').value);
+            const ratioStr = document.getElementById('mixRatio').value;
+            
+            if (isNaN(volume) || volume <= 0) {
+                alert('請輸入有效的體積值');
+                return;
+            }
+            
+            const ratioParts = ratioStr.split(':');
+            const cementRatio = parseFloat(ratioParts[0]);
+            const sandRatio = parseFloat(ratioParts[1]);
+            const totalRatio = cementRatio + sandRatio;
+            
+            const cementVolume = (cementRatio / totalRatio) * volume;
+            const sandVolume = (sandRatio / totalRatio) * volume;
+            
+            // 假設水泥密度為1440 kg/m³
+            const cementWeight = cementVolume * 1440;
+            const cementBags = Math.ceil(cementWeight / 50); // 50kg一包
+            
+            const resultDiv = document.getElementById('sandCementResult');
+            resultDiv.innerHTML = `
+                <h4>計算結果:</h4>
+                <p><strong>砂漿體積:</strong> ${volume} 立方公尺</p>
+                <p><strong>混合比例:</strong> ${ratioStr}</p>
+                <p><strong>所需材料:</strong></p>
+                <ul>
+                    <li>水泥: ${cementWeight.toFixed(2)} 公斤 (${cementBags} 包)</li>
+                    <li>沙: ${sandVolume.toFixed(2)} 立方公尺</li>
+                </ul>
+                <p><small>注意: 以上為估算值，實際用量可能因施工條件有所差異</small></p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // PWA Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
