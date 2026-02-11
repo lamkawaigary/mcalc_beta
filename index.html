@@ -10,7 +10,7 @@
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <style>
-        /* iOS 26 風格設計 */
+        /* iOS 26 風格設計 - 統一配色 */
         * {
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
@@ -22,1200 +22,180 @@
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
+            color: #1a1a2e;
             min-height: 100vh;
             padding: 20px 10px;
             overflow-x: hidden;
         }
         
         .container {
-            max-width: 400px;
+            max-width: 420px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        h1 {
-            color: #2c3e50;
+        header {
             text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-            font-size: 24px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
         }
         
-        .calculator-selector {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #2c3e50;
-            font-size: 16px;
-        }
-        
-        input {
-            width: 100%;
-            padding: 16px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            font-size: 16px;
-            color: #2c3e50;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2), inset 0 2px 4px rgba(0,0,0,0.05);
-            background: rgba(255, 255, 255, 0.95);
-        }
-        
-        .calculator-form {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
-            animation: fadeIn 0.4s ease-out;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        
-        .calculator-form.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .form-group {
-            margin-bottom: 18px;
-        }
-        
-        input::placeholder {
-            color: #95a5a6;
-        }
-        
-        button {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        button::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #3ca0e3 0%, #3498db 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        }
-        
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
-        }
-        
-        button:active::after {
-            opacity: 1;
-        }
-        
-        .result {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border-radius: 16px;
-            display: none;
-            animation: slideIn 0.4s ease-out;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            border-left: 5px solid #4CAF50;
-        }
-        
-        .result.show {
-            display: block;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        .result h4 {
-            margin-top: 0;
-            color: #2c3e50;
-            font-size: 18px;
-        }
-        
-        .result ul {
-            padding-left: 20px;
-        }
-        
-        .result li {
-            margin-bottom: 8px;
-        }
-        
-        .material-info {
-            margin-top: 25px;
-            padding: 20px;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border-radius: 16px;
-            border-left: 5px solid #2196F3;
-        }
-        
-        .material-info h3 {
-            margin-top: 0;
-            color: #2c3e50;
-        }
-        
-        .nav-buttons {
+        header h1 {
+            color: #1a1a2e;
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
             display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 25px;
-        }
-        
-        .nav-button {
-            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-            color: white;
-            padding: 14px 24px;
-            text-decoration: none;
-            border-radius: 12px;
-            display: inline-block;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
-        }
-        
-        .nav-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
-        }
-        
-        .version-info {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-        
-        /* 彈出視窗樣式 */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            border-radius: 20px 20px 0 0;
-            padding: 25px;
-            z-index: 1001;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-            max-height: 70vh;
-            overflow-y: auto;
-            box-shadow: 0 -5px 30px rgba(0,0,0,0.2);
-        }
-        
-        .modal.active {
-            transform: translateY(0);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            justify-content: center;
+            gap: 10px;
         }
         
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #7f8c8d;
-            padding: 5px;
-        }
-        
-        .option-list {
-            list-style: none;
-            padding: 0;
+        header p {
+            color: #6c757d;
+            font-size: 14px;
             margin: 0;
         }
         
-        .option-item {
-            padding: 16px;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 25px 0 15px 0;
+            padding-left: 5px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .tool-grid {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .tool-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 20px;
             display: flex;
             align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
         }
         
-        .option-item:hover, .option-item.selected {
-            background: #e3f2fd;
-            border-color: #3498db;
-            transform: translateX(5px);
+        .tool-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(52, 152, 219, 0.15);
+            border-color: rgba(52, 152, 219, 0.3);
         }
         
-        .option-item.selected {
-            border-width: 2px;
-            background: #d6eaf8;
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
         }
         
-        .option-icon {
-            margin-right: 12px;
+        .tool-icon.calculator { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .tool-icon.materials { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .tool-icon.test { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        
+        .tool-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .tool-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        .tool-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #6c757d;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .arrow {
+            color: #bdc3c7;
             font-size: 20px;
         }
         
-        .option-text {
-            flex-grow: 1;
-        }
-        
-        .swipe-indicator {
+        footer {
             text-align: center;
-            color: #95a5a6;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            color: #6c757d;
             font-size: 12px;
-            margin-top: 10px;
         }
         
-        /* iPhone 15 專業設計 */
-        @media screen and (max-width: 400px) {
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 480px) {
             .container {
-                margin: 0 10px;
                 padding: 20px 15px;
-                border-radius: 24px;
             }
-            
-            h1 {
+            header h1 {
                 font-size: 22px;
-                margin-bottom: 20px;
             }
-            
-            input, button {
-                padding: 16px;
-                border-radius: 14px;
-            }
-            
-            button {
-                padding: 18px;
-                font-size: 17px;
-            }
-            
-            .modal {
-                padding: 20px 15px;
-            }
-        }
-        
-        /* iOS 滑動效果 */
-        .ios-slide-up {
-            animation: iosSlideUp 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        
-        @keyframes iosSlideUp {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        /* 動態互動效果 */
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
-        }
-        
-        /* 標題動畫 */
-        .title-animated {
-            animation: titleFloat 3s ease-in-out infinite;
-        }
-        
-        @keyframes titleFloat {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
         }
     </style>
 </head>
 <body>
-    <div class="container ios-slide-up">
-        <h1 class="title-animated">🏗️ 建築材料用量計算器</h1>
+    <div class="container">
+        <header>
+            <h1>🏗️ mcalc_beta</h1>
+            <p>建築材料用量計算器 v1.0.0</p>
+        </header>
         
-        <div class="calculator-selector">
-            <label for="calcType">選擇計算類型:</label>
-            <button type="button" id="calcTypeBtn" class="pulse" onclick="openCalculatorSelector()">
-                <span id="calcTypeLabel">-- 選擇計算器 --</span>
-            </button>
-        </div>
+        <div class="section-title">計算工具</div>
         
-        <!-- 計算器類型選擇彈出視窗 -->
-        <div id="calculatorModal" class="modal-overlay">
-            <div class="modal">
-                <div class="modal-header">
-                    <div class="modal-title">選擇計算器類型</div>
-                    <button class="close-modal" onclick="closeModal('calculatorModal')">&times;</button>
+        <div class="tool-grid">
+            <a href="./building_calculator/" class="tool-card">
+                <div class="tool-icon materials">🏗️</div>
+                <div class="tool-info">
+                    <h3>建築材料計算器</h3>
+                    <p>混凝土、磚塊、瓷磚、油漆</p>
                 </div>
-                <ul class="option-list">
-                    <li class="option-item" onclick="selectCalculator('concrete', '🏗️ 混凝土用量計算')">
-                        <span class="option-icon">🏗️</span>
-                        <span class="option-text">混凝土用量計算</span>
-                    </li>
-                    <li class="option-item" onclick="selectCalculator('brick', '🧱 磚塊用量計算')">
-                        <span class="option-icon">🧱</span>
-                        <span class="option-text">磚塊用量計算</span>
-                    </li>
-                    <li class="option-item" onclick="selectCalculator('tiles', '🪨 瓷磚用量計算')">
-                        <span class="option-icon">🪨</span>
-                        <span class="option-text">瓷磚用量計算</span>
-                    </li>
-                    <li class="option-item" onclick="selectCalculator('paint', '漆 油漆用量計算')">
-                        <span class="option-icon">漆</span>
-                        <span class="option-text">油漆用量計算</span>
-                    </li>
-                    <li class="option-item" onclick="selectCalculator('flooring', '🪵 地板材料用量計算')">
-                        <span class="option-icon">🪵</span>
-                        <span class="option-text">地板材料用量計算</span>
-                    </li>
-                    <li class="option-item" onclick="selectCalculator('sand_cement', '🏗️ 沙水泥用量計算')">
-                        <span class="option-icon">🏗️</span>
-                        <span class="option-text">沙水泥用量計算</span>
-                    </li>
-                    <li class="option-item" onclick="selectCalculator('rebar', '⚙️ 鋼筋用量計算')">
-                        <span class="option-icon">⚙️</span>
-                        <span class="option-text">鋼筋用量計算</span>
-                    </li>
-                    <li class="option-item" onclick="selectCalculator('wood', '🪵 木材用量計算')">
-                        <span class="option-icon">🪵</span>
-                        <span class="option-text">木材用量計算</span>
-                    </li>
-                </ul>
-                <div class="swipe-indicator">👆 滑動查看更多選項</div>
-            </div>
-        </div>
-        
-        <!-- 混凝土計算器 -->
-        <div id="concreteForm" class="calculator-form">
-            <h3>🏗️ 混凝土用量計算</h3>
-            <div class="form-group">
-                <label for="concreteLength">長度 (米):</label>
-                <input type="number" id="concreteLength" step="0.01" min="0" placeholder="例如: 5.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="concreteWidth">寬度 (米):</label>
-                <input type="number" id="concreteWidth" step="0.01" min="0" placeholder="例如: 3.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="concreteHeight">高度/厚度 (米):</label>
-                <input type="number" id="concreteHeight" step="0.01" min="0" placeholder="例如: 0.2" class="pulse">
-            </div>
-            <button onclick="calculateConcrete()">🔢 計算混凝土用量</button>
+                <div class="arrow">→</div>
+            </a>
             
-            <div id="concreteResult" class="result"></div>
-        </div>
-        
-        <!-- 磚塊計算器 -->
-        <div id="brickForm" class="calculator-form">
-            <h3>🧱 磚塊用量計算</h3>
-            <div class="form-group">
-                <label for="brickWallArea">牆壁面積 (平方米):</label>
-                <input type="number" id="brickWallArea" step="0.01" min="0" placeholder="例如: 10.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="brickType">磚塊類型:</label>
-                <button type="button" id="brickTypeBtn" class="pulse" onclick="openBrickTypeSelector()">
-                    <span id="brickTypeLabel">選擇磚塊類型</span>
-                </button>
-            </div>
-            <button onclick="calculateBrick()">🧱 計算磚塊用量</button>
-            
-            <div id="brickResult" class="result"></div>
-        </div>
-        
-        <!-- 瓷磚計算器 -->
-        <div id="tilesForm" class="calculator-form">
-            <h3>🪨 瓷磚用量計算</h3>
-            <div class="form-group">
-                <label for="tilesArea">鋪設面積 (平方米):</label>
-                <input type="number" id="tilesArea" step="0.01" min="0" placeholder="例如: 12.5" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="tileLength">瓷磚長度 (厘米):</label>
-                <input type="number" id="tileLength" step="0.1" min="0" placeholder="例如: 30" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="tileWidth">瓷磚寬度 (厘米):</label>
-                <input type="number" id="tileWidth" step="0.1" min="0" placeholder="例如: 30" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="wastagePercent">損耗率 (%):</label>
-                <input type="number" id="wastagePercent" value="5" min="0" max="20" class="pulse">
-            </div>
-            <button onclick="calculateTiles()">🪨 計算瓷磚用量</button>
-            
-            <div id="tilesResult" class="result"></div>
-        </div>
-        
-        <!-- 油漆計算器 -->
-        <div id="paintForm" class="calculator-form">
-            <h3>漆 油漆用量計算</h3>
-            <div class="form-group">
-                <label for="paintArea">塗刷面積 (平方米):</label>
-                <input type="number" id="paintArea" step="0.01" min="0" placeholder="例如: 50.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="paintLayers">塗刷層數:</label>
-                <input type="number" id="paintLayers" value="2" min="1" max="5" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="paintCoverage">每升油漆覆蓋面積 (平方米/升):</label>
-                <input type="number" id="paintCoverage" value="10" step="0.1" min="1" class="pulse">
-            </div>
-            <button onclick="calculatePaint()">漆 計算油漆用量</button>
-            
-            <div id="paintResult" class="result"></div>
-        </div>
-        
-        <!-- 地板材料計算器 -->
-        <div id="flooringForm" class="calculator-form">
-            <h3>🪵 地板材料用量計算</h3>
-            <div class="form-group">
-                <label for="flooringArea">鋪設面積 (平方米):</label>
-                <input type="number" id="flooringArea" step="0.01" min="0" placeholder="例如: 20.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="flooringType">地板類型:</label>
-                <button type="button" id="flooringTypeBtn" class="pulse" onclick="openFlooringTypeSelector()">
-                    <span id="flooringTypeLabel">選擇地板類型</span>
-                </button>
-            </div>
-            <div class="form-group">
-                <label for="flooringWastage">損耗率 (%):</label>
-                <input type="number" id="flooringWastage" value="7" min="0" max="20" class="pulse">
-            </div>
-            <button onclick="calculateFlooring()">🪵 計算地板用量</button>
-            
-            <div id="flooringResult" class="result"></div>
-        </div>
-        
-        <!-- 沙水泥計算器 -->
-        <div id="sandCementForm" class="calculator-form">
-            <h3>🏗️ 沙水泥用量計算</h3>
-            <div class="form-group">
-                <label for="sandCementVolume">所需砂漿體積 (立方米):</label>
-                <input type="number" id="sandCementVolume" step="0.01" min="0" placeholder="例如: 1.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="mixRatio">混合比例 (水泥:沙):</label>
-                <button type="button" id="mixRatioBtn" class="pulse" onclick="openMixRatioSelector()">
-                    <span id="mixRatioLabel">選擇混合比例</span>
-                </button>
-            </div>
-            <button onclick="calculateSandCement()">🏗️ 計算沙水泥用量</button>
-            
-            <div id="sandCementResult" class="result"></div>
-        </div>
-        
-        <!-- 鋼筋計算器 -->
-        <div id="rebarForm" class="calculator-form">
-            <h3>⚙️ 鋼筋用量計算</h3>
-            <div class="form-group">
-                <label for="rebarLength">混凝土構件長度 (米):</label>
-                <input type="number" id="rebarLength" step="0.01" min="0" placeholder="例如: 5.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="rebarWidth">混凝土構件寬度 (米):</label>
-                <input type="number" id="rebarWidth" step="0.01" min="0" placeholder="例如: 3.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="rebarHeight">混凝土構件高度 (米):</label>
-                <input type="number" id="rebarHeight" step="0.01" min="0" placeholder="例如: 0.4" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="rebarSpacing">鋼筋間距 (毫米):</label>
-                <input type="number" id="rebarSpacing" value="150" min="50" max="500" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="rebarDiameter">鋼筋直徑 (毫米):</label>
-                <input type="number" id="rebarDiameter" value="12" min="6" max="50" class="pulse">
-            </div>
-            <button onclick="calculateRebar()">⚙️ 計算鋼筋用量</button>
-            
-            <div id="rebarResult" class="result"></div>
-        </div>
-        
-        <!-- 木材計算器 -->
-        <div id="woodForm" class="calculator-form">
-            <h3>🪵 木材用量計算</h3>
-            <div class="form-group">
-                <label for="woodArea">所需鋪設面積 (平方米):</label>
-                <input type="number" id="woodArea" step="0.01" min="0" placeholder="例如: 15.0" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="woodPlankWidth">木板寬度 (毫米):</label>
-                <input type="number" id="woodPlankWidth" value="120" min="50" max="300" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="woodPlankThickness">木板厚度 (毫米):</label>
-                <input type="number" id="woodPlankThickness" value="18" min="10" max="100" class="pulse">
-            </div>
-            <div class="form-group">
-                <label for="woodWastage">損耗率 (%):</label>
-                <input type="number" id="woodWastage" value="10" min="0" max="30" class="pulse">
-            </div>
-            <button onclick="calculateWood()">🪵 計算木材用量</button>
-            
-            <div id="woodResult" class="result"></div>
-        </div>
-        
-        <!-- 磚塊類型選擇彈出視窗 -->
-        <div id="brickTypeModal" class="modal-overlay">
-            <div class="modal">
-                <div class="modal-header">
-                    <div class="modal-title">選擇磚塊類型</div>
-                    <button class="close-modal" onclick="closeModal('brickTypeModal')">&times;</button>
+            <a href="test_ui.html" class="tool-card">
+                <div class="tool-icon test">🧪</div>
+                <div class="tool-info">
+                    <h3>新功能測試</h3>
+                    <p>體驗最新功能</p>
                 </div>
-                <ul class="option-list">
-                    <li class="option-item" onclick="selectBrickType('standard', '標準磚 (230×110×76mm)')">
-                        <span class="option-icon">🧱</span>
-                        <span class="option-text">標準磚 (230×110×76mm)</span>
-                    </li>
-                    <li class="option-item" onclick="selectBrickType('hollow', '空心磚 (230×110×150mm)')">
-                        <span class="option-icon">🪟</span>
-                        <span class="option-text">空心磚 (230×110×150mm)</span>
-                    </li>
-                    <li class="option-item" onclick="selectBrickType('solid', '實心磚 (230×110×110mm)')">
-                        <span class="option-icon">🟫</span>
-                        <span class="option-text">實心磚 (230×110×110mm)</span>
-                    </li>
-                </ul>
-                <div class="swipe-indicator">👆 滑動選擇磚塊類型</div>
-            </div>
+                <div class="arrow">→</div>
+            </a>
         </div>
         
-        <!-- 地板類型選擇彈出視窗 -->
-        <div id="flooringTypeModal" class="modal-overlay">
-            <div class="modal">
-                <div class="modal-header">
-                    <div class="modal-title">選擇地板類型</div>
-                    <button class="close-modal" onclick="closeModal('flooringTypeModal')">&times;</button>
-                </div>
-                <ul class="option-list">
-                    <li class="option-item" onclick="selectFlooringType('wood', '木地板')">
-                        <span class="option-icon">🪵</span>
-                        <span class="option-text">木地板</span>
-                    </li>
-                    <li class="option-item" onclick="selectFlooringType('laminate', '複合地板')">
-                        <span class="option-icon"> engineered</span>
-                        <span class="option-text">複合地板</span>
-                    </li>
-                    <li class="option-item" onclick="selectFlooringType('vinyl', '乙烯基地板')">
-                        <span class="option-icon">⬜</span>
-                        <span class="option-text">乙烯基地板</span>
-                    </li>
-                </ul>
-                <div class="swipe-indicator">👆 滑動選擇地板類型</div>
-            </div>
-        </div>
-        
-        <!-- 混合比例選擇彈出視窗 -->
-        <div id="mixRatioModal" class="modal-overlay">
-            <div class="modal">
-                <div class="modal-header">
-                    <div class="modal-title">選擇混合比例</div>
-                    <button class="close-modal" onclick="closeModal('mixRatioModal')">&times;</button>
-                </div>
-                <ul class="option-list">
-                    <li class="option-item" onclick="selectMixRatio('1:3', '1:3 (水泥:沙) - 砌磚用')">
-                        <span class="option-icon">🏗️</span>
-                        <span class="option-text">1:3 (水泥:沙) - 砌磚用</span>
-                    </li>
-                    <li class="option-item" onclick="selectMixRatio('1:4', '1:4 (水泥:沙) - 一般抹灰')">
-                        <span class="option-icon">🪑</span>
-                        <span class="option-text">1:4 (水泥:沙) - 一般抹灰</span>
-                    </li>
-                    <li class="option-item" onclick="selectMixRatio('1:5', '1:5 (水泥:沙) - 輕負荷抹灰')">
-                        <span class="option-icon">🪟</span>
-                        <span class="option-text">1:5 (水泥:沙) - 輕負荷抹灰</span>
-                    </li>
-                    <li class="option-item" onclick="selectMixRatio('1:6', '1:6 (水泥:沙) - 內牆抹灰')">
-                        <span class="option-icon">🏠</span>
-                        <span class="option-text">1:6 (水泥:沙) - 內牆抹灰</span>
-                    </li>
-                </ul>
-                <div class="swipe-indicator">👆 滑動選擇混合比例</div>
-            </div>
-        </div>
-        
-        <div class="material-info">
-            <h3>💡 使用說明</h3>
-            <ul>
-                <li>從下拉菜單中選擇所需的計算類型</li>
-                <li>填入相關的尺寸或面積數據</li>
-                <li>點擊計算按鈕獲得結果</li>
-                <li>結果已考慮常規損耗和施工需求</li>
-            </ul>
-        </div>
-        
-        <div class="nav-buttons">
-            <a href="./main.html" class="nav-button">🏠 返回主選單</a>
-        </div>
-        
-        <div class="version-info">
-            <p>版本: v1.0.0 | 更新時間: 2026-02-05</p>
-        </div>
+        <footer>
+            <p>最後更新: 2026-02-11</p>
+        </footer>
     </div>
-
-    <script>
-        // 當前選中的值
-        let currentCalcType = '';
-        let currentBrickType = '';
-        let currentFlooringType = '';
-        let currentMixRatio = '';
-
-        // 顯示相應的計算表單
-        function openCalculatorSelector() {
-            document.getElementById('calculatorModal').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('calculatorModal').classList.add('active');
-                document.querySelector('#calculatorModal .modal').classList.add('active');
-            }, 10);
-        }
-
-        // 磚塊類型選擇器
-        function openBrickTypeSelector() {
-            document.getElementById('brickTypeModal').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('brickTypeModal').classList.add('active');
-                document.querySelector('#brickTypeModal .modal').classList.add('active');
-            }, 10);
-        }
-
-        // 地板類型選擇器
-        function openFlooringTypeSelector() {
-            document.getElementById('flooringTypeModal').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('flooringTypeModal').classList.add('active');
-                document.querySelector('#flooringTypeModal .modal').classList.add('active');
-            }, 10);
-        }
-
-        // 混合比例選擇器
-        function openMixRatioSelector() {
-            document.getElementById('mixRatioModal').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('mixRatioModal').classList.add('active');
-                document.querySelector('#mixRatioModal .modal').classList.add('active');
-            }, 10);
-        }
-
-        // 關閉指定的彈出視窗
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('active');
-            document.querySelector(`#${modalId} .modal`).classList.remove('active');
-            
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 400);
-        }
-
-        // 選擇計算器類型
-        function selectCalculator(value, label) {
-            currentCalcType = value;
-            document.getElementById('calcTypeLabel').textContent = label;
-            
-            // 隱藏所有表單
-            const forms = document.querySelectorAll('.calculator-form');
-            forms.forEach(form => form.classList.remove('active'));
-            
-            // 重置所有結果面板
-            const results = document.querySelectorAll('.result');
-            results.forEach(result => {
-                result.classList.remove('show');
-                result.innerHTML = '';
-            });
-            
-            // 顯示選中的表單
-            if (value) {
-                document.getElementById(value + 'Form').classList.add('active');
-            }
-            
-            closeModal('calculatorModal');
-        }
-
-        // 選擇磚塊類型
-        function selectBrickType(value, label) {
-            currentBrickType = value;
-            document.getElementById('brickTypeLabel').textContent = label;
-            closeModal('brickTypeModal');
-        }
-
-        // 選擇地板類型
-        function selectFlooringType(value, label) {
-            currentFlooringType = value;
-            document.getElementById('flooringTypeLabel').textContent = label;
-            closeModal('flooringTypeModal');
-        }
-
-        // 選擇混合比例
-        function selectMixRatio(value, label) {
-            currentMixRatio = value;
-            document.getElementById('mixRatioLabel').textContent = label;
-            closeModal('mixRatioModal');
-        }
-
-        // 混凝土用量計算
-        function calculateConcrete() {
-            const length = parseFloat(document.getElementById('concreteLength').value);
-            const width = parseFloat(document.getElementById('concreteWidth').value);
-            const height = parseFloat(document.getElementById('concreteHeight').value);
-            
-            if (isNaN(length) || isNaN(width) || isNaN(height) || length <= 0 || width <= 0 || height <= 0) {
-                alert('請輸入有效的尺寸值');
-                return;
-            }
-            
-            const volume = length * width * height;
-            const cement = volume * 320; // kg (約每立方公尺320kg水泥)
-            const sand = volume * 0.5; // 立方公尺
-            const gravel = volume * 1.0; // 立方公尺
-            const water = volume * 180; // 升
-            
-            const resultDiv = document.getElementById('concreteResult');
-            resultDiv.innerHTML = `
-                <h4>🏗️ 計算結果:</h4>
-                <p><strong>混凝土體積:</strong> ${volume.toFixed(2)} 立方公尺</p>
-                <p><strong>所需材料:</strong></p>
-                <ul>
-                    <li>🏗️ 水泥: ${cement.toFixed(2)} 公斤</li>
-                    <li>🪨 沙: ${sand.toFixed(2)} 立方公尺</li>
-                    <li>⛏️ 碎石: ${gravel.toFixed(2)} 立方公尺</li>
-                    <li>💧 水: ${water.toFixed(2)} 升</li>
-                </ul>
-                <p><small>⚠️ 注意: 以上為標準C20混凝土配合比估算，實際用量可能因設計要求有所不同</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 磚塊用量計算
-        function calculateBrick() {
-            const area = parseFloat(document.getElementById('brickWallArea').value);
-            
-            if (isNaN(area) || area <= 0) {
-                alert('請輸入有效的面積值');
-                return;
-            }
-            
-            // 使用全局變量 currentBrickType
-            let bricksPerSqM;
-            switch(currentBrickType) {
-                case 'standard':
-                    bricksPerSqM = 60; // 標準磚每平方公尺約60塊
-                    break;
-                case 'hollow':
-                    bricksPerSqM = 35; // 空心磚每平方公尺約35塊
-                    break;
-                case 'solid':
-                    bricksPerSqM = 45; // 實心磚每平方公尺約45塊
-                    break;
-                default:
-                    bricksPerSqM = 60;
-            }
-            
-            const bricksNeeded = Math.ceil(area * bricksPerSqM * 1.05); // 加5%損耗
-            
-            const resultDiv = document.getElementById('brickResult');
-            resultDiv.innerHTML = `
-                <h4>🧱 計算結果:</h4>
-                <p><strong>牆壁面積:</strong> ${area} 平方公尺</p>
-                <p><strong>磚塊類型:</strong> ${document.getElementById('brickTypeLabel').textContent}</p>
-                <p><strong>所需磚塊數量:</strong> ${bricksNeeded} 塊</p>
-                <p><small>✅ (已包含5%損耗及施工需求)</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 瓷磚用量計算
-        function calculateTiles() {
-            const area = parseFloat(document.getElementById('tilesArea').value);
-            const tileLength = parseFloat(document.getElementById('tileLength').value);
-            const tileWidth = parseFloat(document.getElementById('tileWidth').value);
-            const wastagePercent = parseFloat(document.getElementById('wastagePercent').value) || 5;
-            
-            if (isNaN(area) || area <= 0) {
-                alert('請輸入有效的面積值');
-                return;
-            }
-            
-            if (isNaN(tileLength) || isNaN(tileWidth) || tileLength <= 0 || tileWidth <= 0) {
-                alert('請輸入有效的瓷磚尺寸');
-                return;
-            }
-            
-            // 轉換為米
-            const lengthInMeters = tileLength / 100;
-            const widthInMeters = tileWidth / 100;
-            
-            const tileArea = lengthInMeters * widthInMeters;
-            const tilesNeeded = Math.ceil((area / tileArea) * (1 + wastagePercent / 100));
-            
-            const resultDiv = document.getElementById('tilesResult');
-            resultDiv.innerHTML = `
-                <h4>🪨 計算結果:</h4>
-                <p><strong>鋪設面積:</strong> ${area} 平方公尺</p>
-                <p><strong>瓷磚尺寸:</strong> ${tileLength}cm × ${tileWidth}cm</p>
-                <p><strong>瓷磚面積:</strong> ${tileArea.toFixed(4)} 平方公尺</p>
-                <p><strong>所需瓷磚數量:</strong> ${tilesNeeded} 塊</p>
-                <p><small>✅ (已包含${wastagePercent}%損耗及切割需求)</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 油漆用量計算
-        function calculatePaint() {
-            const area = parseFloat(document.getElementById('paintArea').value);
-            const layers = parseInt(document.getElementById('paintLayers').value) || 2;
-            const coverage = parseFloat(document.getElementById('paintCoverage').value) || 10;
-            
-            if (isNaN(area) || area <= 0) {
-                alert('請輸入有效的面積值');
-                return;
-            }
-            
-            const paintNeeded = (area * layers) / coverage;
-            
-            const resultDiv = document.getElementById('paintResult');
-            resultDiv.innerHTML = `
-                <h4>漆 計算結果:</h4>
-                <p><strong>塗刷面積:</strong> ${area} 平方公尺</p>
-                <p><strong>塗刷層數:</strong> ${layers} 層</p>
-                <p><strong>每升覆蓋面積:</strong> ${coverage} 平方公尺</p>
-                <p><strong>所需油漆:</strong> ${paintNeeded.toFixed(2)} 升</p>
-                <p><small>💡 建議多預留10-15%以確保充足</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 地板材料用量計算
-        function calculateFlooring() {
-            const area = parseFloat(document.getElementById('flooringArea').value);
-            
-            if (isNaN(area) || area <= 0) {
-                alert('請輸入有效的面積值');
-                return;
-            }
-            
-            const wastage = parseFloat(document.getElementById('flooringWastage').value) || 7;
-            const totalArea = area * (1 + wastage / 100);
-            
-            const resultDiv = document.getElementById('flooringResult');
-            resultDiv.innerHTML = `
-                <h4>🪵 計算結果:</h4>
-                <p><strong>鋪設面積:</strong> ${area} 平方公尺</p>
-                <p><strong>地板類型:</strong> ${document.getElementById('flooringTypeLabel').textContent}</p>
-                <p><strong>損耗率:</strong> ${wastage}%</p>
-                <p><strong>所需材料面積:</strong> ${totalArea.toFixed(2)} 平方公尺</p>
-                <p><small>✅ (已包含${wastage}%損耗及裁切需求)</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 沙水泥用量計算
-        function calculateSandCement() {
-            const volume = parseFloat(document.getElementById('sandCementVolume').value);
-            
-            if (isNaN(volume) || volume <= 0) {
-                alert('請輸入有效的體積值');
-                return;
-            }
-            
-            // 使用全局變量 currentMixRatio
-            const ratioParts = currentMixRatio.split(':');
-            const cementRatio = parseFloat(ratioParts[0]);
-            const sandRatio = parseFloat(ratioParts[1]);
-            const totalRatio = cementRatio + sandRatio;
-            
-            const cementVolume = (cementRatio / totalRatio) * volume;
-            const sandVolume = (sandRatio / totalRatio) * volume;
-            
-            // 假設水泥密度為1440 kg/m³
-            const cementWeight = cementVolume * 1440;
-            const cementBags = Math.ceil(cementWeight / 50); // 50kg一包
-            
-            const resultDiv = document.getElementById('sandCementResult');
-            resultDiv.innerHTML = `
-                <h4>🏗️ 計算結果:</h4>
-                <p><strong>砂漿體積:</strong> ${volume} 立方公尺</p>
-                <p><strong>混合比例:</strong> ${currentMixRatio} (${document.getElementById('mixRatioLabel').textContent})</p>
-                <p><strong>所需材料:</strong></p>
-                <ul>
-                    <li>🏗️ 水泥: ${cementWeight.toFixed(2)} 公斤 (${cementBags} 包)</li>
-                    <li>🪨 沙: ${sandVolume.toFixed(2)} 立方公尺</li>
-                </ul>
-                <p><small>⚠️ 注意: 以上為估算值，實際用量可能因施工條件有所差異</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 鋼筋用量計算
-        function calculateRebar() {
-            const length = parseFloat(document.getElementById('rebarLength').value);
-            const width = parseFloat(document.getElementById('rebarWidth').value);
-            const height = parseFloat(document.getElementById('rebarHeight').value);
-            const spacing = parseFloat(document.getElementById('rebarSpacing').value);
-            const diameter = parseFloat(document.getElementById('rebarDiameter').value);
-            
-            if (isNaN(length) || isNaN(width) || isNaN(height) || isNaN(spacing) || isNaN(diameter) ||
-                length <= 0 || width <= 0 || height <= 0 || spacing <= 0 || diameter <= 0) {
-                alert('請輸入有效的數值');
-                return;
-            }
-            
-            // 計算縱向和橫向鋼筋數量
-            const longitudinalCount = Math.ceil(width / (spacing / 1000)); // 轉換為米
-            const transverseCount = Math.ceil(length / (spacing / 1000));
-            
-            // 計算總長度
-            const longitudinalLength = longitudinalCount * length;
-            const transverseLength = transverseCount * width;
-            const totalLength = longitudinalLength + transverseLength;
-            
-            // 計算重量 (kg/m) = 直徑(mm)^2 / 162
-            const weightPerMeter = (diameter * diameter) / 162;
-            const totalWeight = totalLength * weightPerMeter;
-            
-            const resultDiv = document.getElementById('rebarResult');
-            resultDiv.innerHTML = `
-                <h4>⚙️ 計算結果:</h4>
-                <p><strong>構件尺寸:</strong> ${length}m × ${width}m × ${height}m</p>
-                <p><strong>鋼筋間距:</strong> ${spacing}mm</p>
-                <p><strong>鋼筋直徑:</strong> ${diameter}mm</p>
-                <p><strong>縱向鋼筋:</strong> ${longitudinalCount} 根 × ${length}m = ${longitudinalLength.toFixed(2)}m</p>
-                <p><strong>橫向鋼筋:</strong> ${transverseCount} 根 × ${width}m = ${transverseLength.toFixed(2)}m</p>
-                <p><strong>總長度:</strong> ${totalLength.toFixed(2)} 米</p>
-                <p><strong>總重量:</strong> ${totalWeight.toFixed(2)} 公斤</p>
-                <p><small>⚠️ 注意: 這是基本估算，實際用量需考慮搭接、彎鉤等因素</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 木材用量計算
-        function calculateWood() {
-            const area = parseFloat(document.getElementById('woodArea').value);
-            const plankWidth = parseFloat(document.getElementById('woodPlankWidth').value);
-            const wastage = parseFloat(document.getElementById('woodWastage').value) || 10;
-            
-            if (isNaN(area) || isNaN(plankWidth) || area <= 0 || plankWidth <= 0) {
-                alert('請輸入有效的數值');
-                return;
-            }
-            
-            // 計算所需木板面積（含損耗）
-            const totalArea = area * (1 + wastage / 100);
-            
-            // 計算每塊木板的面積（轉換為平方米）
-            const plankArea = (plankWidth / 1000) * 2.4; // 假設木板長度為2.4米
-            
-            // 計算所需木板數量
-            const planksNeeded = Math.ceil(totalArea / plankArea);
-            
-            // 計算總體積
-            const thickness = parseFloat(document.getElementById('woodPlankThickness').value) / 1000; // 轉換為米
-            const volume = planksNeeded * plankArea * thickness;
-            
-            const resultDiv = document.getElementById('woodResult');
-            resultDiv.innerHTML = `
-                <h4>🪵 計算結果:</h4>
-                <p><strong>所需鋪設面積:</strong> ${area} 平方公尺</p>
-                <p><strong>木板尺寸:</strong> ${plankWidth}mm 寬 × ${thickness * 1000}mm 厚 × 2400mm 長</p>
-                <p><strong>損耗率:</strong> ${wastage}%</p>
-                <p><strong>所需木板數量:</strong> ${planksNeeded} 塊</p>
-                <p><strong>木板總體積:</strong> ${volume.toFixed(3)} 立方公尺</p>
-                <p><small>⚠️ 注意: 假設標準木板長度為2.4米，實際長度可能有所不同</small></p>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        // 點擊彈出視窗外的區域關閉視窗
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                const modalId = event.target.id;
-                closeModal(modalId);
-            }
-        }
-
-        // 強制更新 Service Worker 和清除緩存
-        function forceUpdate() {
-            // 清除所有緩存
-            if ('caches' in window) {
-                caches.keys().then(function(cacheNames) {
-                    cacheNames.forEach(function(cacheName) {
-                        caches.delete(cacheName);
-                        console.log('Cache deleted:', cacheName);
-                    });
-                });
-            }
-
-            // 強制更新 Service Worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for(let registration of registrations) {
-                        registration.unregister();
-                        console.log('Service Worker unregistered');
-                        
-                        // 重新加載頁面以獲取最新版本
-                        window.location.reload(true);
-                    }
-                });
-            }
-        }
-
-        // 檢查是否有可用的更新
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then((registration) => {
-                    console.log('SW registered: ', registration);
-
-                    // 監聽更新
-                    registration.onupdatefound = () => {
-                        const installingWorker = registration.installing;
-                        installingWorker.onstatechange = () => {
-                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // 發現新版本，提示用戶刷新
-                                if (confirm('發現新版本，是否重新加載應用？')) {
-                                    window.location.reload(true);
-                                }
-                            }
-                        };
-                    };
-                })
-                .catch((registrationError) => {
-                    console.log('SW registration failed: ', registrationError);
-                });
-        }
-
-        // 頁面加載時強制檢查更新
-        window.addEventListener('load', function() {
-            // 延遲執行以避免阻塞頁面加載
-            setTimeout(() => {
-                // 嘗試註冊一個新的 Service Worker 來檢查是否有更新
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistration('./sw.js').then(function(registration) {
-                        if (registration) {
-                            registration.update(); // 檢查更新
-                        }
-                    });
-                }
-            }, 1000); // 1秒後執行
-        });
-
-        // 每次頁面可見時檢查更新
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                // 頁面回到前台時，延遲檢查更新
-                setTimeout(() => {
-                    if ('serviceWorker' in navigator) {
-                        navigator.serviceWorker.getRegistration('./sw.js').then(function(registration) {
-                            if (registration) {
-                                registration.update();
-                            }
-                        });
-                    }
-                }, 2000); // 2秒後執行
-            }
-        });
-
-        // 加載版本信息
-        async function loadVersionInfo() {
-            try {
-                const response = await fetch('./version.json');
-                const versionData = await response.json();
-                
-                // 更新頁面上的版本信息
-                const versionElements = document.querySelectorAll('.version-info');
-                versionElements.forEach(element => {
-                    element.innerHTML = `<p>版本: ${versionData.version} | 構建號: ${versionData.buildNumber} | 更新時間: ${versionData.releaseDate}</p>`;
-                });
-                
-                // 在標題中也顯示版本
-                document.title = `mcalc_beta - 建築材料計算器 ${versionData.version}`;
-            } catch (error) {
-                console.log('無法加載版本信息:', error);
-                // 如果無法加載版本文件，使用默認版本號
-                const versionElements = document.querySelectorAll('.version-info');
-                versionElements.forEach(element => {
-                    element.innerHTML = '<p>版本: v1.0.0 | 構建號: 2026020501 | 更新時間: 2026-02-05</p>';
-                });
-            }
-        }
-
-        // 頁面加載時加載版本信息
-        document.addEventListener('DOMContentLoaded', loadVersionInfo);
-    </script>
 </body>
 </html>
