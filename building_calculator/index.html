@@ -17,6 +17,14 @@
             -moz-osx-font-smoothing: grayscale;
         }
         
+        /* 打印樣式 - 用於PDF匯出 */
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; max-width: 100%; }
+            .no-print { display: none !important; }
+            .result { border: 1px solid #ccc; }
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
@@ -276,6 +284,13 @@
                     <span>建議購買量 (+10%)</span>
                     <span id="concreteBuy">0 m³</span>
                 </div>
+                
+                <!-- 分享按鈕 -->
+                <div class="result-actions no-print" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="action-btn share" onclick="shareResult('concrete')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📤 分享</button>
+                    <button class="action-btn csv" onclick="downloadCSV('concrete')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📊 CSV</button>
+                    <button class="action-btn pdf" onclick="printPDF()" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📄 PDF</button>
+                </div>
             </div>
             
             <div class="info-box">
@@ -318,6 +333,13 @@
                     <span>建議購買量 (+5%)</span>
                     <span id="brickBuy">0 塊</span>
                 </div>
+                
+                <!-- 分享按鈕 -->
+                <div class="result-actions no-print" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="action-btn share" onclick="shareResult('brick')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📤 分享</button>
+                    <button class="action-btn csv" onclick="downloadCSV('brick')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📊 CSV</button>
+                    <button class="action-btn pdf" onclick="printPDF()" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📄 PDF</button>
+                </div>
             </div>
             
             <div class="info-box">
@@ -357,6 +379,13 @@
                     <span>建議購買量 (+8%)</span>
                     <span id="tilesBuy">0 塊</span>
                 </div>
+                
+                <!-- 分享按鈕 -->
+                <div class="result-actions no-print" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="action-btn share" onclick="shareResult('tiles')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📤 分享</button>
+                    <button class="action-btn csv" onclick="downloadCSV('tiles')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📊 CSV</button>
+                    <button class="action-btn pdf" onclick="printPDF()" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📄 PDF</button>
+                </div>
             </div>
             
             <div class="info-box">
@@ -394,6 +423,13 @@
                 <div class="result-item">
                     <span>總需求量 (全部塗層)</span>
                     <span id="paintTotal">0 L</span>
+                </div>
+                
+                <!-- 分享按鈕 -->
+                <div class="result-actions no-print" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="action-btn share" onclick="shareResult('paint')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📤 分享</button>
+                    <button class="action-btn csv" onclick="downloadCSV('paint')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📊 CSV</button>
+                    <button class="action-btn pdf" onclick="printPDF()" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📄 PDF</button>
                 </div>
             </div>
             
@@ -437,6 +473,13 @@
                     <span>所需地板數量 (+8%)</span>
                     <span id="flooringCount">0 塊</span>
                 </div>
+                
+                <!-- 分享按鈕 -->
+                <div class="result-actions no-print" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="action-btn share" onclick="shareResult('flooring')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📤 分享</button>
+                    <button class="action-btn csv" onclick="downloadCSV('flooring')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📊 CSV</button>
+                    <button class="action-btn pdf" onclick="printPDF()" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📄 PDF</button>
+                </div>
             </div>
             
             <div class="info-box">
@@ -478,6 +521,13 @@
                 <div class="result-item">
                     <span>建議購買 (25kg/包)</span>
                     <span id="selfLevelBags">0 包</span>
+                </div>
+                
+                <!-- 分享按鈕 -->
+                <div class="result-actions no-print" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="action-btn share" onclick="shareResult('selfleveling')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📤 分享</button>
+                    <button class="action-btn csv" onclick="downloadCSV('selfleveling')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📊 CSV</button>
+                    <button class="action-btn pdf" onclick="printPDF()" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">📄 PDF</button>
                 </div>
             </div>
             
@@ -599,5 +649,133 @@
             document.getElementById('selfLevelWeight').textContent = totalWeight.toFixed(1) + ' kg';
             document.getElementById('selfLevelBags').textContent = Math.ceil(totalWeight / 25).toLocaleString() + ' 包 (每包 25kg)';
             document.getElementById('selfLevelResult').classList.add('show');
+        }
+        
+        // ========== 分享/匯出功能 ==========
+        
+        // 生成結果文字
+        function generateResultText(calcType) {
+            const typeNames = {
+                'concrete': '混凝土用量計算',
+                'brick': '磚塊用量計算',
+                'tiles': '瓷磚用量計算',
+                'paint': '油漆用量計算',
+                'flooring': '地板材料計算',
+                'selfleveling': '自流平材料計算'
+            };
+            
+            const date = new Date().toLocaleDateString('zh-HK');
+            let text = `🏗️ mcalc_beta 計算結果\n`;
+            text += `📅 ${date}\n`;
+            text += `─────────────────\n`;
+            text += `🔧 ${typeNames[calcType] || '計算結果'}\n`;
+            text += `─────────────────\n`;
+            
+            // 取得結果數值
+            const resultEl = document.getElementById(calcType + 'Result');
+            const resultItems = resultEl.querySelectorAll('.result-item');
+            
+            resultItems.forEach(item => {
+                const label = item.querySelector('span:first-child').textContent;
+                const value = item.querySelector('span:last-child').textContent;
+                text += `${label}: ${value}\n`;
+            });
+            
+            text += `─────────────────\n`;
+            text += `Powered by mcalc_beta`;
+            return text;
+        }
+        
+        // 生成 CSV 內容
+        function generateCSV(calcType) {
+            const typeNames = {
+                'concrete': '混凝土用量計算',
+                'brick': '磚塊用量計算',
+                'tiles': '瓷磚用量計算',
+                'paint': '油漆用量計算',
+                'flooring': '地板材料計算',
+                'selfleveling': '自流平材料計算'
+            };
+            
+            const date = new Date().toISOString().split('T')[0];
+            let csv = `mcalc_beta 計算結果,${date}\n`;
+            csv += `計算類型,${typeNames[calcType] || calcType}\n`;
+            csv += `項目,數值\n`;
+            
+            const resultEl = document.getElementById(calcType + 'Result');
+            const resultItems = resultEl.querySelectorAll('.result-item');
+            
+            resultItems.forEach(item => {
+                const label = item.querySelector('span:first-child').textContent;
+                const value = item.querySelector('span:last-child').textContent;
+                csv += `"${label}","${value}"\n`;
+            });
+            
+            return csv;
+        }
+        
+        // 分享功能 (Web Share API)
+        async function shareResult(calcType) {
+            const text = generateResultText(calcType);
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'mcalc_beta 計算結果',
+                        text: text
+                    });
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        copyToClipboard(text);
+                    }
+                }
+            } else {
+                // 不支援 Web Share API，fallback 到複製
+                copyToClipboard(text);
+            }
+        }
+        
+        // 複製到剪貼簿
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ 已複製到剪貼簿！');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ 已複製到剪貼簿！');
+            });
+        }
+        
+        // 下載 CSV
+        function downloadCSV(calcType) {
+            const csv = generateCSV(calcType);
+            const typeNames = {
+                'concrete': '混凝土計算',
+                'brick': '磚塊計算',
+                'tiles': '瓷磚計算',
+                'paint': '油漆計算',
+                'flooring': '地板計算',
+                'selfleveling': '自流平計算'
+            };
+            
+            const date = new Date().toISOString().split('T')[0];
+            const filename = `mcalc_${typeNames[calcType]}_${date}.csv`;
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+        
+        // 列印/匯出 PDF
+        function printPDF() {
+            window.print();
         }
     </script>

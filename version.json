@@ -1,8 +1,9 @@
 {
   "version": "v1.0.1",
-  "buildNumber": "2026021102",
+  "buildNumber": "2026021103",
   "releaseDate": "2026-02-11",
   "changes": [
+    "新增分享/匯出功能 (分享、CSV、PDF)",
     "新增自流平材料計算功能",
     "統一 User Flow - 首頁清晰導航",
     "更新 iOS 26 風格 - 全部頁面統一配色",
