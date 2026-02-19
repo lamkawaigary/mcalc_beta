@@ -220,6 +220,25 @@
             line-height: 1.8;
         }
         
+        .back-to-types {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-types:hover {
+            background: rgba(52, 152, 219, 0.2);
+            border-color: rgba(52, 152, 219, 0.5);
+        }
+        
         footer {
             text-align: center;
             margin-top: 25px;
@@ -241,7 +260,7 @@
 <body>
     <div class="container">
         <header>
-            <a href="../index.html" class="back-btn">←</a>
+            <a href="../index.html" class="back-btn" title="返回首頁">←</a>
             <h1>🏗️ 建築材料計算器</h1>
         </header>
         
@@ -260,6 +279,7 @@
         
         <!-- 混凝土計算表單 -->
         <div id="concrete" class="calculator-form">
+            <button class="back-to-types" onclick="showCalcTypeSelector()">← 選擇其他計算類型</button>
             <div class="form-group">
                 <label for="concreteLength">長度 (米)</label>
                 <input type="number" id="concreteLength" placeholder="輸入數值" step="0.01">
@@ -305,6 +325,8 @@
         
         <!-- 磚塊計算表單 -->
         <div id="brick" class="calculator-form">
+            <button class="back-to-types" onclick="showCalcTypeSelector()">← 選擇其他計算類型</button>
+            
             <div class="form-group">
                 <label for="brickLength">牆身長度 (米)</label>
                 <input type="number" id="brickLength" placeholder="輸入數值" step="0.01">
@@ -354,6 +376,8 @@
         
         <!-- 瓷磚計算表單 -->
         <div id="tiles" class="calculator-form">
+            <button class="back-to-types" onclick="showCalcTypeSelector()">← 選擇其他計算類型</button>
+            
             <div class="form-group">
                 <label for="tilesArea">鋪設面積 (平方米)</label>
                 <input type="number" id="tilesArea" placeholder="輸入數值" step="0.01">
@@ -400,6 +424,8 @@
         
         <!-- 油漆計算表單 -->
         <div id="paint" class="calculator-form">
+            <button class="back-to-types" onclick="showCalcTypeSelector()">← 選擇其他計算類型</button>
+            
             <div class="form-group">
                 <label for="paintArea">需要油漆的面積 (平方米)</label>
                 <input type="number" id="paintArea" placeholder="輸入數值" step="0.1">
@@ -445,6 +471,8 @@
         
         <!-- 地板材料計算表單 -->
         <div id="flooring" class="calculator-form">
+            <button class="back-to-types" onclick="showCalcTypeSelector()">← 選擇其他計算類型</button>
+            
             <div class="form-group">
                 <label for="flooringLength">房間長度 (米)</label>
                 <input type="number" id="flooringLength" placeholder="輸入數值" step="0.01">
@@ -494,6 +522,8 @@
         
         <!-- 自流平計算表單 -->
         <div id="selfleveling" class="calculator-form">
+            <button class="back-to-types" onclick="showCalcTypeSelector()">← 選擇其他計算類型</button>
+            
             <div class="form-group">
                 <label for="selfLevelArea">施工面積 (平方米)</label>
                 <input type="number" id="selfLevelArea" placeholder="輸入數值" step="0.1">
@@ -542,14 +572,16 @@
             </div>
         </div>
         
-        <footer>
-            <p class="version-info">
-                <a href="../index.html">← 返回主頁</a>
-            </p>
-        </footer>
     </div>
     
     <script>
+        // 顯示計算器類型選擇
+        function showCalcTypeSelector() {
+            const forms = document.querySelectorAll('.calculator-form');
+            forms.forEach(form => form.classList.remove('active'));
+            document.getElementById('calcType').value = '';
+        }
+        
         // 計算器選擇
         document.getElementById('calcType').addEventListener('change', function() {
             const type = this.value;
