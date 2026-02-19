@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>單位轉換器 - mcalc_beta</title>
+    <link rel="manifest" href="../manifest.json">
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+        
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.8);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #1a1a2e;
+        }
+        
+        header h1 {
+            flex: 1;
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .converter-section {
+            margin-bottom: 25px;
+        }
+        
+        .converter-section h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 15px 0;
+            padding-left: 5px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .converter-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .converter-card label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        
+        .converter-card select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            background: white;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .input-group span {
+            font-size: 20px;
+            color: #6c757d;
+        }
+        
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        
+        .result-box .label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .result-box .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #27ae60;
+        }
+        
+        .formula {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+        
+        .quick-convert {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .quick-btn {
+            padding: 12px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-btn:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            color: #6c757d;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-btn">←</a>
+            <h1>🔄 單位轉換器</h1>
+        </header>
+        
+        <!-- 長度轉換 -->
+        <div class="converter-section">
+            <h2>📏 長度</h2>
+            
+            <div class="converter-card">
+                <label>轉換類型</label>
+                <select id="lengthType" onchange="convertLength()">
+                    <option value="m_ft">米 ↔ 尺</option>
+                    <option value="m_ft2">米 ↔ 平方尺</option>
+                    <option value="cm_in">厘米 ↔ 吋</option>
+                    <option value="ft_in">尺 ↔ 吋</option>
+                </select>
+                
+                <div class="input-group">
+                    <input type="number" id="lengthInput" placeholder="輸入數值" oninput="convertLength()">
+                    <span>⇄</span>
+                    <input type="number" id="lengthResult" placeholder="結果" readonly>
+                </div>
+                
+                <div class="result-box" id="lengthResultBox" style="display:none;">
+                    <div class="label">轉換結果</div>
+                    <div class="value" id="lengthFinal"></div>
+                </div>
+                
+                <div class="formula" id="lengthFormula"></div>
+            </div>
+        </div>
+        
+        <!-- 面積轉換 -->
+        <div class="converter-section">
+            <h2>📐 面積</h2>
+            
+            <div class="converter-card">
+                <label>轉換類型</label>
+                <select id="areaType" onchange="convertArea()">
+                    <option value="sqm_sqft">平方米 ↔ 平方尺</option>
+                    <option value="sqm_sqft2">平方米 ↔ 平方呎</option>
+                    <option value="acre_hectare">畝 ↔ 公頃</option>
+                </select>
+                
+                <div class="input-group">
+                    <input type="number" id="areaInput" placeholder="輸入數值" oninput="convertArea()">
+                    <span>⇄</span>
+                    <input type="number" id="areaResult" placeholder="結果" readonly>
+                </div>
+                
+                <div class="result-box" id="areaResultBox" style="display:none;">
+                    <div class="label">轉換結果</div>
+                    <div class="value" id="areaFinal"></div>
+                </div>
+                
+                <div class="formula" id="areaFormula"></div>
+            </div>
+        </div>
+        
+        <!-- 體積轉換 -->
+        <div class="converter-section">
+            <h2>📦 體積</h2>
+            
+            <div class="converter-card">
+                <label>轉換類型</label>
+                <select id="volumeType" onchange="convertVolume()">
+                    <option value="cum_cuft">立方米 ↔ 立方尺</option>
+                    <option value="l_gal">公升 ↔ 加侖</option>
+                    <option value="l_galuk">公升 ↔ 英制加侖</option>
+                </select>
+                
+                <div class="input-group">
+                    <input type="number" id="volumeInput" placeholder="輸入數值" oninput="convertVolume()">
+                    <span>⇄</span>
+                    <input type="number" id="volumeResult" placeholder="結果" readonly>
+                </div>
+                
+                <div class="result-box" id="volumeResultBox" style="display:none;">
+                    <div class="label">轉換結果</div>
+                    <div class="value" id="volumeFinal"></div>
+                </div>
+                
+                <div class="formula" id="volumeFormula"></div>
+            </div>
+        </div>
+        
+        <!-- 重量轉換 -->
+        <div class="converter-section">
+            <h2>⚖️ 重量</h2>
+            
+            <div class="converter-card">
+                <label>轉換類型</label>
+                <select id="weightType" onchange="convertWeight()">
+                    <option value="kg_lb">公斤 ↔ 磅</option>
+                    <option value="ton_lb">噸 ↔ 磅</option>
+                    <option value="kg_st">公斤 ↔ Stones</option>
+                </select>
+                
+                <div class="input-group">
+                    <input type="number" id="weightInput" placeholder="輸入數值" oninput="convertWeight()">
+                    <span>⇄</span>
+                    <input type="number" id="weightResult" placeholder="結果" readonly>
+                </div>
+                
+                <div class="result-box" id="weightResultBox" style="display:none;">
+                    <div class="label">轉換結果</div>
+                    <div class="value" id="weightFinal"></div>
+                </div>
+                
+                <div class="formula" id="weightFormula"></div>
+            </div>
+        </div>
+        
+        <!-- 快速轉換 -->
+        <div class="converter-section">
+            <h2>⚡ 快速轉換</h2>
+            <div class="quick-convert">
+                <button class="quick-btn" onclick="quickConvert('1m')">1米 = 3.28尺</button>
+                <button class="quick-btn" onclick="quickConvert('10sqm')">10㎡ = 107.6平方尺</button>
+                <button class="quick-btn" onclick="quickConvert('1cum')">1立方米 = 35.3立方尺</button>
+                <button class="quick-btn" onclick="quickConvert('1kg')">1公斤 = 2.2磅</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>最後更新: 2026-02-19</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 長度轉換
+        function convertLength() {
+            const type = document.getElementById('lengthType').value;
+            const input = parseFloat(document.getElementById('lengthInput').value);
+            
+            if (isNaN(input)) {
+                document.getElementById('lengthResult').value = '';
+                document.getElementById('lengthResultBox').style.display = 'none';
+                return;
+            }
+            
+            let result, formula, label;
+            
+            switch(type) {
+                case 'm_ft':
+                    result = input * 3.28084;
+                    formula = '1米 = 3.28084尺';
+                    label = `${input} 米 = ${result.toFixed(2)} 尺`;
+                    break;
+                case 'm_ft2':
+                    result = input * 10.7639;
+                    formula = '1平方米 = 10.764平方尺';
+                    label = `${input} 平方米 = ${result.toFixed(2)} 平方尺`;
+                    break;
+                case 'cm_in':
+                    result = input / 2.54;
+                    formula = '1吋 = 2.54厘米';
+                    label = `${input} 厘米 = ${result.toFixed(2)} 吋`;
+                    break;
+                case 'ft_in':
+                    result = input * 12;
+                    formula = '1尺 = 12吋';
+                    label = `${input} 尺 = ${result.toFixed(2)} 吋`;
+                    break;
+            }
+            
+            document.getElementById('lengthResult').value = result.toFixed(2);
+            document.getElementById('lengthFinal').textContent = label;
+            document.getElementById('lengthFormula').textContent = formula;
+            document.getElementById('lengthResultBox').style.display = 'block';
+        }
+        
+        // 面積轉換
+        function convertArea() {
+            const type = document.getElementById('areaType').value;
+            const input = parseFloat(document.getElementById('areaInput').value);
+            
+            if (isNaN(input)) {
+                document.getElementById('areaResult').value = '';
+                document.getElementById('areaResultBox').style.display = 'none';
+                return;
+            }
+            
+            let result, formula, label;
+            
+            switch(type) {
+                case 'sqm_sqft':
+                    result = input * 10.7639;
+                    formula = '1平方米 = 10.764平方尺';
+                    label = `${input} 平方米 = ${result.toFixed(2)} 平方尺`;
+                    break;
+                case 'sqm_sqft2':
+                    result = input * 10.7639;
+                    formula = '1平方米 = 10.764平方呎';
+                    label = `${input} 平方米 = ${result.toFixed(2)} 平方呎`;
+                    break;
+                case 'acre_hectare':
+                    result = input * 0.404686;
+                    formula = '1畝 = 0.404686公頃';
+                    label = `${input} 畝 = ${result.toFixed(4)} 公頃`;
+                    break;
+            }
+            
+            document.getElementById('areaResult').value = result.toFixed(2);
+            document.getElementById('areaFinal').textContent = label;
+            document.getElementById('areaFormula').textContent = formula;
+            document.getElementById('areaResultBox').style.display = 'block';
+        }
+        
+        // 體積轉換
+        function convertVolume() {
+            const type = document.getElementById('volumeType').value;
+            const input = parseFloat(document.getElementById('volumeInput').value);
+            
+            if (isNaN(input)) {
+                document.getElementById('volumeResult').value = '';
+                document.getElementById('volumeResultBox').style.display = 'none';
+                return;
+            }
+            
+            let result, formula, label;
+            
+            switch(type) {
+                case 'cum_cuft':
+                    result = input * 35.3147;
+                    formula = '1立方米 = 35.315立方尺';
+                    label = `${input} 立方米 = ${result.toFixed(2)} 立方尺`;
+                    break;
+                case 'l_gal':
+                    result = input * 0.264172;
+                    formula = '1公升 = 0.264美制加侖';
+                    label = `${input} 公升 = ${result.toFixed(2)} 美制加侖`;
+                    break;
+                case 'l_galuk':
+                    result = input * 0.219969;
+                    formula = '1公升 = 0.22英制加侖';
+                    label = `${input} 公升 = ${result.toFixed(2)} 英制加侖`;
+                    break;
+            }
+            
+            document.getElementById('volumeResult').value = result.toFixed(2);
+            document.getElementById('volumeFinal').textContent = label;
+            document.getElementById('volumeFormula').textContent = formula;
+            document.getElementById('volumeResultBox').style.display = 'block';
+        }
+        
+        // 重量轉換
+        function convertWeight() {
+            const type = document.getElementById('weightType').value;
+            const input = parseFloat(document.getElementById('weightInput').value);
+            
+            if (isNaN(input)) {
+                document.getElementById('weightResult').value = '';
+                document.getElementById('weightResultBox').style.display = 'none';
+                return;
+            }
+            
+            let result, formula, label;
+            
+            switch(type) {
+                case 'kg_lb':
+                    result = input * 2.20462;
+                    formula = '1公斤 = 2.205磅';
+                    label = `${input} 公斤 = ${result.toFixed(2)} 磅`;
+                    break;
+                case 'ton_lb':
+                    result = input * 2204.62;
+                    formula = '1噸 = 2204.62磅';
+                    label = `${input} 噸 = ${result.toFixed(2)} 磅`;
+                    break;
+                case 'kg_st':
+                    result = input * 0.157473;
+                    formula = '1公斤 = 0.157 Stones';
+                    label = `${input} 公斤 = ${result.toFixed(2)} Stones`;
+                    break;
+            }
+            
+            document.getElementById('weightResult').value = result.toFixed(2);
+            document.getElementById('weightFinal').textContent = label;
+            document.getElementById('weightFormula').textContent = formula;
+            document.getElementById('weightResultBox').style.display = 'block';
+        }
+        
+        // 快速轉換
+        function quickConvert(type) {
+            alert('常用轉換參考:\n\n' +
+                '1米 = 3.28尺\n' +
+                '1平方米 = 10.76平方尺\n' +
+                '1立方米 = 35.3立方尺\n' +
+                '1公斤 = 2.2磅\n' +
+                '1噸 = 2205磅\n' +
+                '1公升 = 0.26美制加侖\n' +
+                '1畝 = 4047平方米');
+        }
+    </script>
+</body>
+</html>
