@@ -806,8 +806,207 @@
             URL.revokeObjectURL(link.href);
         }
         
-        // 列印/匯出 PDF
+        // 專業PDF匯出功能
         function printPDF() {
-            window.print();
+            const calcType = document.getElementById('calcType').value;
+            const typeNames = {
+                'concrete': '混凝土用量計算',
+                'brick': '磚塊用量計算',
+                'tiles': '瓷磚用量計算',
+                'paint': '油漆用量計算',
+                'flooring': '地板材料計算',
+                'selfleveling': '自流平材料計算'
+            };
+            
+            let resultContent = '';
+            let title = typeNames[calcType] || '計算結果';
+            
+            // 根據計算類型提取結果
+            if (calcType === 'concrete') {
+                resultContent = `
+                    <tr><td>所需混凝土體積</td><td>${document.getElementById('concreteVolume').textContent}</td></tr>
+                    <tr><td>建議購買量 (+10%)</td><td>${document.getElementById('concreteBuy').textContent}</td></tr>
+                `;
+            } else if (calcType === 'brick') {
+                resultContent = `
+                    <tr><td>所需磚塊數量</td><td>${document.getElementById('brickCount').textContent}</td></tr>
+                    <tr><td>建議購買量 (+5%)</td><td>${document.getElementById('brickBuy').textContent}</td></tr>
+                `;
+            } else if (calcType === 'tiles') {
+                resultContent = `
+                    <tr><td>所需瓷磚數量</td><td>${document.getElementById('tilesCount').textContent}</td></tr>
+                    <tr><td>建議購買量 (+8%)</td><td>${document.getElementById('tilesBuy').textContent}</td></tr>
+                `;
+            } else if (calcType === 'paint') {
+                const paintArea = document.getElementById('paintArea').value;
+                const paintCoats = document.getElementById('paintCoats').value;
+                const paintResult = document.getElementById('paintResult').textContent;
+                resultContent = `
+                    <tr><td>施工面積</td><td>${paintArea} 平方米</td></tr>
+                    <tr><td>塗層次數</td><td>${paintCoats} 度</td></tr>
+                    <tr><td>所需油漆量</td><td>${paintResult}</td></tr>
+                `;
+            } else if (calcType === 'flooring') {
+                resultContent = `
+                    <tr><td>所需地板材料</td><td>${document.getElementById('flooringResult').textContent}</td></tr>
+                `;
+            } else if (calcType === 'selfleveling') {
+                resultContent = `
+                    <tr><td>所需自流平材料</td><td>${document.getElementById('selfLevelResult').textContent}</td></tr>
+                `;
+            }
+            
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('zh-HK', { year: 'numeric', month: 'long', day: 'numeric' });
+            const timeStr = now.toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
+            
+            // 建立專業PDF報告
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${title} - 報告</title>
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        body { 
+                            font-family: 'Helvetica Neue', Arial, sans-serif; 
+                            padding: 40px; 
+                            color: #333;
+                            line-height: 1.6;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                            padding-bottom: 20px;
+                            border-bottom: 2px solid #3498db;
+                        }
+                        .header h1 {
+                            color: #1a1a2e;
+                            font-size: 24px;
+                            margin-bottom: 10px;
+                        }
+                        .header .subtitle {
+                            color: #666;
+                            font-size: 14px;
+                        }
+                        .meta {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 30px;
+                            padding: 15px;
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            font-size: 13px;
+                        }
+                        .meta-item {
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        .meta-label {
+                            color: #666;
+                            font-size: 11px;
+                            text-transform: uppercase;
+                        }
+                        .meta-value {
+                            color: #1a1a2e;
+                            font-weight: 600;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 30px;
+                        }
+                        th, td {
+                            padding: 12px 15px;
+                            text-align: left;
+                            border-bottom: 1px solid #eee;
+                        }
+                        th {
+                            background: #3498db;
+                            color: white;
+                            font-weight: 600;
+                        }
+                        tr:nth-child(even) {
+                            background: #f8f9fa;
+                        }
+                        .result-highlight {
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #27ae60;
+                            text-align: center;
+                            padding: 20px;
+                            background: #e8f8f0;
+                            border-radius: 8px;
+                            margin: 20px 0;
+                        }
+                        .footer {
+                            margin-top: 40px;
+                            padding-top: 20px;
+                            border-top: 1px solid #eee;
+                            text-align: center;
+                            color: #999;
+                            font-size: 11px;
+                        }
+                        .company {
+                            color: #3498db;
+                            font-weight: 600;
+                        }
+                        @media print {
+                            body { padding: 20px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🏗️ 建築材料計算報告</h1>
+                        <div class="subtitle">mcalc_beta - 專業建築材料用量計算器</div>
+                    </div>
+                    
+                    <div class="meta">
+                        <div class="meta-item">
+                            <span class="meta-label">項目名稱</span>
+                            <span class="meta-value">${title}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">計算日期</span>
+                            <span class="meta-value">${dateStr}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">計算時間</span>
+                            <span class="meta-value">${timeStr}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">報告編號</span>
+                            <span class="meta-value">MCALC-${Date.now().toString().slice(-8)}</span>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>數值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${resultContent}
+                        </tbody>
+                    </table>
+                    
+                    <div class="result-highlight">
+                        📊 計算完成 - 建議購買量已包含損耗
+                    </div>
+                    
+                    <div class="footer">
+                        <p>此報告由 <span class="company">mcalc_beta</span> 建築材料計算器自動生成</p>
+                        <p>Generated by mcalc_beta | ${dateStr} ${timeStr}</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
         }
     </script>
